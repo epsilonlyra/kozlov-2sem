@@ -1,18 +1,15 @@
-#include<iostream>
+#include <iostream>
 using namespace std;
-int main(){
-int N;
-bool temp = true;
-cin >>N;
-for (int i = 2;i * i <= N; i++){
-    if (N%i == 0){
-        cout<<(i)<<endl;
-        }
+
+int main()
+{
+long long int  n;
+cin >> n;
+for(long long int i = n - 2; i * i >= n; i--){
+    if(n % (n - i) == 0){
+        cout << n / (n - i)<<" ";
     }
-for (int i = N;i * i >= N; i--){
-    if (N%i == 0){
-        cout<<N/(i)<<endl;
-        }
-    }
-return(0);
+}
+cout<<endl;
+return 0;
 }
