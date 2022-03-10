@@ -9,21 +9,12 @@ float Maxwell(float T, float v){
 
 }
 
-
-float NaiveMean (float const psi[], float const pdf[], float const dv, unsigned size){
-    float sum = 0.f;
-    for (unsigned idx = 0; idx < size; idx++){
-        sum += psi[idx] * pdf[idx];
-        }
-    return dv * sum;
-}
-
-float RecurMean (float const psi[], float const pdf[], float const dv, unsigned size){
+float RecurMean (float *psi, float *pdf, float const dv, unsigned size){
     if (size == 1) {
-        return (psi[0] * pdf[0]);
+        return dv * (psi[0] * pdf[0]);
         }
     else {
-        return RecurMean(psi, pdf, dv, size / 2);
+        return RecurMean(psi, pdf, dv, size / 2) + RecurMean(&psi[size / 2], &pdf[size / 2], dv, (size - size / 2));
     }
 }
 
@@ -32,19 +23,19 @@ float RecurMean (float const psi[], float const pdf[], float const dv, unsigned 
 
 int main(){
 
-cout << setprecision(100) << fixed;
+cout << setprecision(21) << fixed;
 
 float const T = 1;
-float const infparam = 10000; // это что стоит в экспоненте when the cut the graph
+float const infparam = 100000; // это что стоит в экспоненте when the cut the graph
 float vmax = sqrt(T * infparam);
-unsigned const size = 2;
+unsigned const size = 10000000;
 float dv = 2 * vmax / (size);
 
-float pdf[size];
-float psi[size];
+float *pdf = new float [size];
+float *psi = new float [size];
 for (long int i = 0; i < size; i++){
     pdf[i] = Maxwell(T, -vmax + (i + 0.5) * dv);
-    psi[i] = 1;
+    psi[i] = abs(-vmax + (i + 0.5) * dv);
 }
 
 cout << RecurMean(psi, pdf, dv, size);
