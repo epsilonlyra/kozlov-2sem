@@ -9,13 +9,18 @@ float Maxwell(float T, float v){
 
 }
 
-float RecurMean (float *psi, float *pdf, float const dv, unsigned size){
-    if (size == 1) {
-        return dv * (psi[0] * pdf[0]);
-        }
-    else {
-        return RecurMean(psi, pdf, dv, size / 2) + RecurMean(&psi[size / 2], &pdf[size / 2], dv, (size - size / 2));
+float KehanMean (float *psi, float *pdf, float const dv, unsigned size){
+    float sum, c, t, y;
+    sum = c = t = y =  0.0;
+
+    for (long int i = 0; i < size; i++){
+        y = dv * pdf[i] * psi[i] - c;
+        t = sum + y;
+        c = (t - sum) - y;
+        sum = t;
     }
+
+    return  sum;
 }
 
 
@@ -23,23 +28,22 @@ float RecurMean (float *psi, float *pdf, float const dv, unsigned size){
 
 int main(){
 
-cout << setprecision(10) << fixed;
+cout << setprecision(15) << fixed;
 
 float const T = 1;
 float const infparam = 100; // это что стоит в экспоненте when the cut the graph
 float vmax = sqrt(T * infparam);
-unsigned const size = 10000000;
+unsigned const size = 10000;
 float dv = 2 * vmax / (size);
 
 float *pdf = new float [size];
 float *psi = new float [size];
 for (long int i = 0; i < size; i++){
     pdf[i] = Maxwell(T, -vmax + (i + 0.5) * dv);
-    //psi[i] = abs(-vmax + (i + 0.5) * dv);
     psi[i] = 1;
 }
 
-cout << RecurMean(psi, pdf, dv, size);
+cout << KehanMean(psi, pdf, dv, size);
 
 return 0;
 }

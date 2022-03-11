@@ -9,13 +9,24 @@ float Maxwell(float T, float v){
 
 }
 
-float RecurMean (float *psi, float *pdf, float const dv, unsigned size){
-    if (size == 1) {
-        return dv * (psi[0] * pdf[0]);
-        }
-    else {
-        return RecurMean(psi, pdf, dv, size / 2) + RecurMean(&psi[size / 2], &pdf[size / 2], dv, (size - size / 2));
+float CycleMean (float *psi, float *pdf, float const dv, unsigned const  size){
+
+    float *x = new float [size];
+    for (int i = 0; i < size; i++){
+        x[i] = psi[i] * pdf[i];
     }
+    for (int k = 2; k < 2 * size; k *= 2){
+
+        for (int j = 0; j < size; j += k){
+            if ((j + k/2) < size){
+                x[j] = x[j] + x[j + k / 2];
+                }
+            else{
+                x[j] = x[j];
+            }
+        }
+    }
+    return dv * x[0];
 }
 
 
@@ -35,11 +46,11 @@ float *pdf = new float [size];
 float *psi = new float [size];
 for (long int i = 0; i < size; i++){
     pdf[i] = Maxwell(T, -vmax + (i + 0.5) * dv);
-    //psi[i] = abs(-vmax + (i + 0.5) * dv);
-    psi[i] = 1;
+    psi[i] = abs(-vmax + (i + 0.5) * dv);
+    //psi[i] = 1;
 }
 
-cout << RecurMean(psi, pdf, dv, size);
+cout << CycleMean(psi, pdf, dv, size);
 
 return 0;
 }
