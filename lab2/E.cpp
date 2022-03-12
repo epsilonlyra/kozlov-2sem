@@ -9,12 +9,12 @@ float Maxwell(float T, float v){
 
 }
 
-float RecurMean (float *psi, float *pdf, float const dv, unsigned size){
+double DoubleRecurMean (float *psi, float *pdf, float const dv, unsigned size){
     if (size == 1) {
-        return dv * (psi[0] * pdf[0]);
+        return static_cast<double>(dv) * (static_cast<double>(psi[0]) * static_cast<double>(pdf[0]));
         }
     else {
-        return RecurMean(psi, pdf, dv, size / 2) + RecurMean(&psi[size / 2], &pdf[size / 2], dv, (size - size / 2));
+        return DoubleRecurMean(psi, pdf, dv, size / 2) + DoubleRecurMean(&psi[size / 2], &pdf[size / 2], dv, (size - size / 2));
     }
 }
 
@@ -39,7 +39,7 @@ for (long int i = 0; i < size; i++){
     psi[i] = 1;
 }
 
-cout << RecurMean(psi, pdf, dv, size);
+cout << DoubleRecurMean(psi, pdf, dv, size);
 
 return 0;
 }
