@@ -38,7 +38,7 @@ double DoubleRecurMean (float *psi, float *pdf, float const dv, unsigned size){
         return DoubleRecurMean(psi, pdf, dv, size / 2) + DoubleRecurMean(&psi[size / 2], &pdf[size / 2], dv, (size - size / 2));
     }
 }
-float CycleMean (float *psi, float *pdf, float const dv, unsigned const  size){
+float CycleMean (float *psi, float *pdf, float const dv, unsigned size){
 
     float *x = new float [size];
     for (int i = 0; i < size; i++){
@@ -64,24 +64,35 @@ void Split(float const x, float &x_h, float &x_l) {
   x_l = x - x_h;
 }
 
-void TwoMult(float const a, float const b, float &sum) {
-  float a_high, a_low, b_high, b_low;
+void TwoMult(float const a, float const b, float &s, float &t) {
+  float  a_high, a_low, b_high, b_low;
   Split(a, a_high, a_low);
   Split(b, b_high, b_low);
-  float s = a * b;
-  float t;
-  t = a_high * b_high;
+  s = a * b;
+  t = -s + a_high * b_high;
   t += a_high * b_low;
   t += a_low * b_high;
   t += a_low * b_low;
-  sum = ((a_high*b_high + sum) + a_high * b_low + a_low * b_high) + a_low * b_low;
 }
 
 float FmaMean (float *psi, float *pdf, float const dv, unsigned const  size){
     float sum = 0.0;
 
+    float s = 0.0;
+    float k = 0.0;
+    float c = 0.0;
+
+    float t = 0.0;
+    float y = 0.0;
+
+
+
     for (long int i  = 0; i < size; i++){
-        TwoMult(psi[i], pdf[i], sum);
+        TwoMult(psi[i], pdf[i], s, k);
+        y = s - c;
+        t = sum + y;
+        c = ((t - sum) - y) +  k;
+        sum = t;
     }
 
     return dv * sum;
@@ -89,46 +100,61 @@ float FmaMean (float *psi, float *pdf, float const dv, unsigned const  size){
 
 float KehanMean (float *psi, float *pdf, float const dv, unsigned size){
     float sum, c, t, y;
-    sum = c = t = y =  0.0;
+    sum = c = t = y = 0.0;
 
     for (long int i = 0; i < size; i++){
-        y = dv * pdf[i] * psi[i] - c;
+        y = pdf[i] * psi[i] - c;
         t = sum + y;
         c = (t - sum) - y;
         sum = t;
     }
 
-    return  sum;
+    return  dv * sum;
 }
 
 int main(){
 
-float const T = 1;
+double const T = 1;
+double const average = sqrt(T / M_PI);
 float const infparam = 100; // это что стоит в экспоненте when the cut the graph
 float vmax = sqrt(T * infparam);
-unsigned const size = 1000000;
-float dv = 2 * vmax / (size);
-
-float *pdf = new float [size];
-float *psi = new float [size];
-for (long int i = 0; i < size; i++){
-    pdf[i] = Maxwell(T, -vmax + (i + 0.5) * dv);
-    psi[i] = abs(-vmax + (i + 0.5) * dv);
-    //psi[i] = 1;
-}
 
 ofstream fout("results.txt");
 
+fout << T << ";" << infparam << ";";
+fout << setprecision(10) << average << endl;
+
+fout << "Разбиений" <<  ";Рекурсивное сложение" << ";Двойное Рекурсивное сложение" << ";Наивное сложение";
+fout << ";Прореживающее сложение" << ";Кехановское сложение" << ";Совмещающее сложение" << endl;
+
 fout << setprecision(10) << fixed;
 
-fout << sqrt(T / M_PI) << " " << "Истинное значение" << endl;
-fout << RecurMean(psi, pdf, dv, size) << " " << "Рекурсивное сложение" << endl;
-fout << DoubleRecurMean(psi, pdf, dv, size) << " " << "Двойное Рекурсивное сложение" << endl;
-fout << NaiveMean(psi, pdf, dv, size) << " " << "Наивное сложение" << endl;
-fout << CycleMean(psi, pdf, dv, size) << " " << "Прореживающее сложение" << endl;
-fout << KehanMean(psi, pdf, dv, size) << " "<< "Кехановское сложение" << endl;
-fout << FmaMean(psi, pdf, dv, size) << " " << "Совмещающее сложение" << endl;
+for (unsigned size = 1000; size <= 50000; size += 5){
 
+
+    float dv = 2 * vmax / (size);
+
+    float *pdf = new float [size];
+    float *psi = new float [size];
+    for (long int i = 0; i < size; i++){
+        pdf[i] = Maxwell(T, -vmax + (i + 0.5) * dv);
+        psi[i] = abs(-vmax + (i + 0.5) * dv);
+        //psi[i] = 1;
+    }
+
+
+    fout << size <<";";
+
+    fout << RecurMean(psi, pdf, dv, size)- average<< ";";
+    fout << DoubleRecurMean(psi, pdf, dv, size)- average << ";";
+    fout << NaiveMean(psi, pdf, dv, size)- average << ";";
+    fout << CycleMean(psi, pdf, dv, size)- average << ";";
+    fout << KehanMean(psi, pdf, dv, size)- average << ";";
+    fout << FmaMean(psi, pdf, dv, size)- average;
+
+    fout << endl;
+}
+fout.close();
 
 return 0;
 }

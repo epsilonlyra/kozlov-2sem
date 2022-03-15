@@ -15,24 +15,35 @@ void Split(float const x, float &x_h, float &x_l) {
   x_l = x - x_h;
 }
 
-void TwoMult(float const a, float const b, float &sum) {
-  float a_high, a_low, b_high, b_low;
+void TwoMult(float const a, float const b, float &s, float &t) {
+  float  a_high, a_low, b_high, b_low;
   Split(a, a_high, a_low);
   Split(b, b_high, b_low);
-  float s = a * b;
-  float t;
-  t = a_high * b_high;
+  s = a * b;
+  t = -s + a_high * b_high;
   t += a_high * b_low;
   t += a_low * b_high;
   t += a_low * b_low;
-  sum = ((a_high*b_high + sum) + a_high * b_low + a_low * b_high) + a_low * b_low;
 }
 
 float FmaMean (float *psi, float *pdf, float const dv, unsigned const  size){
     float sum = 0.0;
 
+    float s = 0.0;
+    float k = 0.0;
+    float c = 0.0;
+
+    float t = 0.0;
+    float y = 0.0;
+
+
+
     for (long int i  = 0; i < size; i++){
-        TwoMult(psi[i], pdf[i], sum);
+        TwoMult(psi[i], pdf[i], s, k);
+        y = s - c;
+        t = sum + y;
+        c = ((t - sum) - y) +  k;
+        sum = t;
     }
 
     return dv * sum;

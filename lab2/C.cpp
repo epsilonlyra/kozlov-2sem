@@ -14,13 +14,13 @@ float KehanMean (float *psi, float *pdf, float const dv, unsigned size){
     sum = c = t = y =  0.0;
 
     for (long int i = 0; i < size; i++){
-        y = dv * pdf[i] * psi[i] - c;
+        y = pdf[i] * psi[i] - c;
         t = sum + y;
         c = (t - sum) - y;
         sum = t;
     }
 
-    return  sum;
+    return  dv * sum;
 }
 
 
