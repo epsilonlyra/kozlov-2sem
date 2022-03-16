@@ -129,7 +129,7 @@ fout << ";Прореживающее сложение" << ";Кехановско
 
 fout << setprecision(10) << fixed;
 
-for (unsigned size = 1000; size <= 50000; size += 5){
+for (unsigned size = 1000000; size <= 1000000; size += 5){
 
 
     float dv = 2 * vmax / (size);
@@ -145,12 +145,12 @@ for (unsigned size = 1000; size <= 50000; size += 5){
 
     fout << size <<";";
 
-    fout << RecurMean(psi, pdf, dv, size)- average<< ";";
-    fout << DoubleRecurMean(psi, pdf, dv, size)- average << ";";
-    fout << NaiveMean(psi, pdf, dv, size)- average << ";";
-    fout << CycleMean(psi, pdf, dv, size)- average << ";";
-    fout << KehanMean(psi, pdf, dv, size)- average << ";";
-    fout << FmaMean(psi, pdf, dv, size)- average;
+    fout << static_cast<double>(RecurMean(psi, pdf, dv, size))- average<< ";";
+    fout << static_cast<double>(DoubleRecurMean(psi, pdf, dv, size))<< ";";
+    fout << static_cast<double>(NaiveMean(psi, pdf, dv, size))- average << ";";
+    fout << static_cast<double>(CycleMean(psi, pdf, dv, size))- average << ";";
+    fout << static_cast<double>(KehanMean(psi, pdf, dv, size))- average << ";";
+    fout << static_cast<double>(FmaMean(psi, pdf, dv, size))- average;
 
     fout << endl;
 }
