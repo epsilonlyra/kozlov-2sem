@@ -4,31 +4,21 @@ struct student{
     char name[20];
     int mark;
 
-    bool operator>(const student& right) const{
+    bool operator<(const student right) {
         if (mark != right.mark){
-            return(mark > right.mark);
+            return mark <  right.mark;
             }
-        else{
-            for ( int i = 0;  i < 20; i++){
-                if (name[i] > right.name[i]){
-                    return(true);
-                }
-            }
-            return(false);
-        }
-    }
 
-    bool operator<(const student& right) const{
-        if (mark != right.mark){
-            return(mark < right.mark);
-            }
         else{
-            for (int i = 0; i < 20; i++){
+            for (int i = 0;  i < 20; i++){
                 if (name[i] < right.name[i]){
-                    return(true);
+                    return true;
+                }
+                if (name[i] > right.name[i]){
+                    return false;
                 }
             }
-            return(false);
+            return false;
         }
     }
 
@@ -36,41 +26,42 @@ struct student{
 
 void qsort (student *arr, int N){
 
-int i = 0;
-int j = N - 1;
-student  pivotval = arr[N / 2];
+    int i = 0;
+    int j = N - 1;
+    student  pivotval = arr[N / 2];
 
-while (i <= j){
-    while (arr[i] < pivotval){
-        i++;
+    while (i <= j){
+        while (arr[i] < pivotval){
+            i++;
+        }
+
+        while (pivotval < arr[j]){
+            j--;
+        }
+
+        if (i <= j){
+            student temp = arr[j];
+            arr[j] = arr[i];
+            arr[i] = temp;
+            i++;
+            j--;
+        }
     }
 
-    while (arr[j] > pivotval){
-        j--;
+    if (j > 0){
+        qsort(arr, j + 1);
     }
 
-    if (i <= j){
-        student temp = arr[j];
-        arr[j] = arr[i];
-        arr[i] = temp;
-        i++;
-        j--;
+    if (i < N){
+        qsort(&arr[i], N - i);
     }
-}
-
-if (j > 0){
-    qsort(arr, j + 1);
-}
-
-if (i < N){
-    qsort(&arr[i], N - i);
-}
 
 }
 
 int main() {
 
-int const N = 3;
+int  N; //количество студентов
+cin >> N;
 student* Class = new student[N];
 
 for (int i = 0; i < N; i++){
@@ -79,7 +70,8 @@ for (int i = 0; i < N; i++){
 }
 
 qsort(Class, N);
-int M;
+
+int M; // проходные
 cin >> M;
 
 for (int i = 0; i < N; i++){
@@ -88,7 +80,6 @@ for (int i = 0; i < N; i++){
     }
 }
 
-cout<<endl;
-
+cout << endl;
 return 0;
 }

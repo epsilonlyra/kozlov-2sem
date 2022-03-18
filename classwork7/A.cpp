@@ -7,7 +7,7 @@ struct student{
 
 int main() {
 
-int const N = 3;
+int const N = 10; //количество студентов
 student* Class = new student[N];
 
 for (int i = 0; i < N; i++){
@@ -24,7 +24,7 @@ for (int i = 0; i < N; i++){
     }
 }
 
-cout<<endl;
+cout << endl;
 
 return 0;
 }
