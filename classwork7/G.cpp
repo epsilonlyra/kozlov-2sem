@@ -1,6 +1,7 @@
 #include<iostream>
 using namespace std;
-enum Reaction {alpha =  -2, betaplus = -1, betaminus = 1};
+enum chargechange {alpha =  -2, betaplus = -1, betaminus = 1};
+enum masschange {alpha_m =  -4, betaplus_m = 0, betaminus_m = 0};
 struct Atom{
     char name [2];
     int A = 0;
@@ -11,7 +12,7 @@ struct Atom{
         return input;
     }
 
-    friend ostream& operator>>(ostream &input, Atom &other) {
+    friend ostream& operator<<(ostream &input, Atom &other) {
         input << other.name << other.A << other.Z;
         return input;
     }
@@ -79,7 +80,8 @@ int BinSearch(Atom *a, int N, int x){
 
 struct React{
     char name[2];
-    Reaction reaction;
+    chargechange dcharge;
+    masschange dmass;
 
 
     React() {}
@@ -100,13 +102,16 @@ struct React{
         }
 
         if (lastletter == '+'){
-            reaction = betaplus;
+            dcharge = betaplus;
+            dmass = betaplus_m;
         }
         if (lastletter == '-'){
-            reaction = betaminus;
+            dcharge = betaminus;
+            dmass = betaminus_m;
         }
         if (lastletter == 'a'){
-            reaction = alpha;
+            dcharge = alpha;
+            dmass = alpha_m;
         }
     }
 };
@@ -145,20 +150,30 @@ for (int i = 0; i < M; i++){
     ReactList[i] = React(t_name, t_deckay);
 }
 
-int *NuclearCharge = new int [M];
+int **NewNuclea;
+
+NewNuclea = new int* [M];
+for (int i = 0; i < M; i++){
+    NewNuclea[i] = new int [2];
+}
+
 for (int i = 0; i < M; i++){
     for (int j = 0; j < N; j++){ // я понимаю что это мега неэффективно и медленно но нет времени думать
         if (AreEqual(ReactList[i].name, AtomList[j].name)){
-            NuclearCharge[i] = AtomList[j].Z +  ReactList[i].reaction;
+            NewNuclea[i][0] = AtomList[j].Z +  ReactList[i].dcharge;
+            NewNuclea[i][1] = AtomList[j].A +  ReactList[i].dmass;
             break;
         }
     }
 }
 
 for (int i = 0; i < M; i++){
-    int temp = BinSearch(AtomList, N, NuclearCharge[i]);
+    int temp = BinSearch(AtomList, N, NewNuclea[i][0]);
     if (temp == -1){
         cout << "NO DATA"<<" ";
+    }
+    else if( (AtomList[temp].A) != NewNuclea[i][1]){
+        cout <<"NO DATA"<< " ";
     }
     else{
         for (int j = 0; j < 2; j++){
@@ -167,6 +182,6 @@ for (int i = 0; i < M; i++){
         cout <<" ";
     }
 }
-
+cout << endl;
 return 0;
 }
