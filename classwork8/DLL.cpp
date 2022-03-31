@@ -63,7 +63,7 @@ struct List{
         int i = 0;
         Node* current = head;
 
-        if (head == nullptr){
+        if (head == nullptr){ // если список пустой создайте
             append_list(value);
         }
         else{
@@ -74,21 +74,188 @@ struct List{
                     tmp->next = current;
                     tmp->prev = current->prev;
 
-                    (current->prev)->next = tmp;
+                    if (current->prev != nullptr){ //если мы вставляем не в начало
+                        (current->prev)->next = tmp;
+                    }
+                    else{
+                        head = tmp;
+                    }
                     current->prev = tmp;
                 }
-                i += 1;
+                i ++;
                 current = current->next;
             }
-            if (i == index){
+            if (i == index){ // если оказалось что мы вставляем в конец
                 Node* tmp = new Node;
                 tmp->field = value;
                 tmp->next = tail;
                 tmp->prev = tail->prev;
-                (tail->prev)->next = tmp;
+                if (tail->prev != nullptr){ // если до хвоста что то есть
+                    (tail->prev)->next = tmp;
+                }
+                else{
+                    head = tmp;
+                }
             }
         }
     }
+
+    void pop(){
+        if (tail != nullptr){
+            if (tail->prev == nullptr){
+                delete  tail;
+                tail = nullptr;
+                head = nullptr;
+            }
+            else{
+                tail = tail->prev;
+                delete tail->next;
+                tail->next = nullptr;
+            }
+        }
+    }
+
+    void delete_list(){
+        while (head != nullptr){
+            pop();
+        }
+    }
+
+    Node* find_by_value(int value){
+        Node* current = head;
+
+        if (current == nullptr){
+            return nullptr;
+        }
+
+        while (current->next != nullptr){
+            if (current->field == value){
+                return current;
+            }
+            current = current->next;
+        }
+
+        if (current->field == value){
+            return current;
+        }
+
+        return nullptr;
+    }
+
+    Node* find_by_index(int index){
+        Node* current = head;
+        int i = 0;
+
+        if (current == nullptr){
+            return nullptr;
+        }
+
+        while (current->next != nullptr){
+            if (i == index){
+                return current;
+            }
+            current = current->next;
+            i++;
+        }
+
+        if (i == index){
+            return current;
+        }
+        return nullptr;
+    }
+
+    int size(){
+        int i = 0;
+        Node* current = head;
+
+        if (current == nullptr){
+            return 0;
+        }
+
+        while (current->next != nullptr){
+            i++;
+            current = current->next;
+        }
+        i++;
+
+        return i;
+    }
+
+    Node* delete_by_value(int value){
+
+        Node* current = head;
+
+        if (current == nullptr){
+            return current;
+        }
+
+        while (current->next != nullptr){
+
+            if (current->field == value){
+
+                if (current->prev != nullptr){
+                    (current->prev)->next = current->next;
+                    (current->next)->prev = current->prev;
+                }
+
+                else {
+                    head = current->next;
+                }
+
+                delete current;
+                return current;
+            }
+
+            current = current->next;
+        }
+        if (current->field == value){
+            pop();
+            return current;
+
+        }
+        return nullptr;
+    }
+
+    Node* delete_by_index(int index){
+
+        Node* current = head;
+        int i = 0;
+
+        if (current == nullptr){
+            return current;
+        }
+
+        while (current->next != nullptr){
+
+            if (i == index){
+
+                if (current->prev != nullptr){
+                    (current->prev)->next = current->next;
+                    (current->next)->prev = current->prev;
+                }
+
+                else {
+                    head = current->next;
+                }
+
+                delete current;
+                return current;
+            }
+
+            current = current->next;
+            i++;
+        }
+        if (i== index){
+            pop();
+            return current;
+
+        }
+        return nullptr;
+    }
+
+
+
+
 };
 
 int main(){
@@ -96,10 +263,11 @@ int main(){
 List A(0);
 A.print_list();
 for (int i = 1; i < 10; i++){
-    A.append_list(i);
+    A.append_list(i * i);
 }
 A.print_list();
-
+std :: cout << A.delete_by_index(8) << std :: endl;
+A.print_list();
 return 0;
 }
 
