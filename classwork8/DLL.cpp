@@ -23,6 +23,11 @@ struct List{
 		tail = head;
 	}
 
+    List(){
+        head = nullptr;
+        tail = head;
+    }
+
 	void print_list (){
 		Node* current = head;
         if (current != nullptr){
@@ -260,7 +265,7 @@ struct List{
 
 int main(){
 
-List A(0);
+List A;
 A.print_list();
 for (int i = 1; i < 10; i++){
     A.append_list(i * i);
