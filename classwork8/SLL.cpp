@@ -5,6 +5,9 @@ struct Node {
     Node* next;
 };
 
+
+
+
 void append(Node** head_ptr, int value){
     Node* current = *head_ptr;
     while (current->next != nullptr) {
@@ -193,6 +196,9 @@ Node* delete_by_index(Node** head_ptr, int index){
 }
 
 struct List {
+	void append(Node**, int);
+	
+	
     Node* head = new Node;
 
 
@@ -201,7 +207,7 @@ struct List {
         head->next = nullptr;
       }
 
-    void append_List(int value){
+    void append(int value){
         append(&head, value);
     }
 
@@ -243,7 +249,7 @@ int main(){
 List A(0);
 
 for (int i = 1; i < 10;i++){
-    A.append_List(i);
+    A.append(i);
 }
 A.print_List();
 std :: cout << A.delete_by_value_List(5) << std :: endl;

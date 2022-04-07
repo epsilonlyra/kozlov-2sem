@@ -14,13 +14,18 @@ struct Stack{
     }
 
     void push(int field){
-
-        Node *tmp = new Node;
-        tmp->field = top->field;
-        tmp->next = nullptr;
-
-        top->field = field;
-        top->next = tmp;
+        if (top == nullptr){
+            top = new Node;
+            top->next = nullptr;
+            top->field = field;
+        }
+        else{
+			Node *tmp = new Node;
+			tmp->field = field;
+			tmp->next = top ;
+			top = tmp;
+		}
+       
     }
 
     Node* pop(){
