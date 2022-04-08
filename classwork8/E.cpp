@@ -68,7 +68,8 @@ while (true){
 }
 
 int sum = 0;
-int result = 1;
+
+bool good_sequence = true;
 while (!Brackets.is_empty()){
 
     if (Brackets.Top()->field == ')'){
@@ -80,15 +81,15 @@ while (!Brackets.is_empty()){
 
     if (sum < 0){
         break;
-        result = 0;
+       good_sequence = false;
     }
 
     Brackets.pop();
 }
 if (sum != 0){
-    result = 0;
+   good_sequence = false;
 }
-std :: cout << sum << std :: endl;
-std :: cout << result;
+//std :: cout << sum << std :: endl;
+std :: cout << !good_sequence; // ложь это ноль, но в нашем случае 1 плохо
 return 0;
 }
