@@ -27,6 +27,7 @@ if (rightdown < N){
 if (largest != i){
     swapm(&(arr[largest]), &(arr[i]));
 
+    order(arr, N, largest);
 }
 
 }
