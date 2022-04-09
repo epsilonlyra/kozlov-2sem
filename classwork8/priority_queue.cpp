@@ -1,5 +1,4 @@
 #include <iostream>
-#include <queue>
 
 struct Node{
 
@@ -183,7 +182,6 @@ struct Pyramid{
     }
 
     void pop(){
-
 
         if (head == nullptr){
             return;
