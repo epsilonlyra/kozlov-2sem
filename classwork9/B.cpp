@@ -20,6 +20,5 @@ std :: cin >> N;
 
 std :: cout << exchange(&N, 98) + exchange(&N, 49) + exchange(&N, 7) + exchange(&N, 1);
 
-
 return 0;
 }

@@ -64,7 +64,7 @@ denom_array_t egyptian_fractions(unsigned long long  num, unsigned long long  de
         denom_array_t res(den);
         return res;
     }
-    if (den >=  1000000000000){
+    if (den >=  100000000000){
         std :: cout << "Error, Denominator too Big " << '\n';
         denom_array_t res;
         return res;
@@ -96,6 +96,7 @@ caesar = egyptian_fractions(num, den);
 for (int i = 0; i < caesar.sz; i++){
     std :: cout << caesar.arr[i] << " ";
 }
+std :: cout << '\n';
 
 caesar.delet();
 return 0;

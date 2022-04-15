@@ -49,5 +49,8 @@ if (death){
 else{
     std :: cout << gas_stations_visited;
 }
+std :: cout << '\n';
+
+delete [] gas_stations;
 return 0;
 }
