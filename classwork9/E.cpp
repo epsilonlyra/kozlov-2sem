@@ -53,9 +53,9 @@ for (int i = 0; i < N; i++){
 int k  = 0;
 for (int i = 0; i < K; i++){
     for (int j = 0; j <= i; j++){
-        if (Congtiguity[i][j] == 1){
-            Incident[j][k] = 1;
-            Incident[i][k] = 1;
+        if (Congtiguity[i][j] != 0){
+            Incident[j][k] = Congtiguity[i][j];
+            Incident[i][k] = Congtiguity[i][j];
             k++;
         }
     }

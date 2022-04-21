@@ -120,6 +120,6 @@ std :: cout << way * 98 << '\n';
 for (int i = 0; i < N; i++){
     delete [] Incident[i];
 }
-delete Incident;
+delete [] Incident;
 return 0;
 }
