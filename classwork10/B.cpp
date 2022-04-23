@@ -12,7 +12,7 @@ for (int i = 1; i < N + 1; i++){
     std :: cin >> Steps[i];
 }
 
-int *Evolve_cost = new int [3 + 1];
+int Evolve_cost[3 + 1];
 Evolve_cost[0] = -1; // для того чтобы нумерация была с единицы
 Evolve_cost[1] = Steps[1];
 Evolve_cost[2] = Steps[2];
@@ -26,6 +26,8 @@ for (int i = 4; i <= N; i++){
 }
 
 std :: cout << Evolve_cost[3];
+
+delete [] Steps;
 
 return 0;
 }
