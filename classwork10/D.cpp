@@ -83,5 +83,14 @@ for(int m = 2; m <= M ; m++){
 
 std :: cout << Cost[0][M];
 
+delete []  Marks;
+
+for (int i = 0; i < M + 2; i++){
+		delete [] Cost[i]
+	
+}
+
+delete [] Cost;
+
 return 0;
 }
